@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mediaai.javamiaosha.backend.dao.SeckillDAO">
+    <!-- 目的:为DAO接口方法提供sql语句配置-->
+
+    <update id="reduceInventory">
+        <!-- 具体sql -->
+        update
+          seckill
+        set
+          inventory = inventory - 1,
+          version = #{newVersion}
+        where seckill_id = #{seckillId}
+        and version = #{oldVersion}
+        ;
+    </update>
+
+    <select id="queryById" resultType="Seckill" parameterType="long">
+        select seckill_id,name,inventory,start_time,end_time,create_time,version
+        from seckill
+        where seckill_id = #{seckillId}
+    </select>
+
+    <select id="queryAll" resultType="Seckill">
+        select seckill_id,name,inventory,start_time,end_time,create_time,version
+        from seckill
+        order by create_time desc
+        limit #{offset},#{limit}
+    </select>
+
+</mapper>

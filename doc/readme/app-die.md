@@ -1,7 +1,7 @@
-# jseckill运行了一段时间后，发现进程是活的端口也是通的，但是网页访问返回504 Gateway Time-out
+# javamiaosha运行了一段时间后，发现进程是活的端口也是通的，但是网页访问返回504 Gateway Time-out
 
 ## 现象
-部署了一个spring boot应用， 发现访问ulr [http://jseckill.appjishu.com/seckill/list](http://jseckill.appjishu.com/seckill/list)
+部署了一个spring boot应用， 发现访问ulr [http://javamiaosha.appjishu.com/seckill/list](http://javamiaosha.appjishu.com/seckill/list)
 
 返回
 ```text
@@ -21,12 +21,12 @@ ssh到服务器
 首先tail xxx.log， 查看项目的日志，没发现任何报错。仅仅是日志在某个时间点后不再打印日志。
 
 ```shell
-[root@iz8vb3nxwmck3z1ruwn8euz ~]# ps -ef|grep jseckill
-root      6027  6010  0 12:07 pts/0    00:00:00 grep --color=auto jseckill
-root     23910     1  0 4月22 ?       00:16:05 java -server -Xms256m -Xmx256m -Xmn64m -jar jseckill-backend.
+[root@iz8vb3nxwmck3z1ruwn8euz ~]# ps -ef|grep javamiaosha
+root      6027  6010  0 12:07 pts/0    00:00:00 grep --color=auto javamiaosha
+root     23910     1  0 4月22 ?       00:16:05 java -server -Xms256m -Xmx256m -Xmn64m -jar javamiaosha-backend.
 ```
 
-说明pid=23910到jseckill进程是活的。
+说明pid=23910到javamiaosha进程是活的。
 ```shell
 [root@iz8vb3nxwmck3z1ruwn8euz ~]# telnet localhost 27000
 Trying 127.0.0.1...
@@ -37,9 +37,9 @@ Escape character is '^]'.
 
 查看内存占用
 ```text
-[root@iz8vb3nxwmck3z1ruwn8euz ~]# ps aux|grep jseckill
-root      6063  0.0  0.0 112676   980 pts/0    S+   12:17   0:00 grep --color=auto jseckill
-root     23910  0.0 18.8 2462676 355104 ?      Sl   4月22  16:06 java -server -Xms256m -Xmx256m -Xmn64m -jar jseckill-backend.jar
+[root@iz8vb3nxwmck3z1ruwn8euz ~]# ps aux|grep javamiaosha
+root      6063  0.0  0.0 112676   980 pts/0    S+   12:17   0:00 grep --color=auto javamiaosha
+root     23910  0.0 18.8 2462676 355104 ?      Sl   4月22  16:06 java -server -Xms256m -Xmx256m -Xmn64m -jar javamiaosha-backend.jar
 [root@iz8vb3nxwmck3z1ruwn8euz ~]# 
 [root@iz8vb3nxwmck3z1ruwn8euz ~]# 
 [root@iz8vb3nxwmck3z1ruwn8euz ~]# 
@@ -337,22 +337,22 @@ jstack 23910 >> threadstack.txt
         at org.apache.commons.pool2.impl.GenericObjectPool.borrowObject(GenericObjectPool.java:365)
         at redis.clients.util.Pool.getResource(Pool.java:49)
         at redis.clients.jedis.JedisPool.getResource(JedisPool.java:226)
-        at com.liushaoming.jseckill.backend.dao.cache.RedisDAO.getAllGoods(RedisDAO.java:82)
-        at com.liushaoming.jseckill.backend.dao.cache.RedisDAO$$FastClassBySpringCGLIB$$3ceb41f7.invoke(<generated>)
+        at com.mediaai.javamiaosha.backend.dao.cache.RedisDAO.getAllGoods(RedisDAO.java:82)
+        at com.mediaai.javamiaosha.backend.dao.cache.RedisDAO$$FastClassBySpringCGLIB$$3ceb41f7.invoke(<generated>)
         at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218)
         at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:749)
         at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
         at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:139)
         at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
         at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:688)
-        at com.liushaoming.jseckill.backend.dao.cache.RedisDAO$$EnhancerBySpringCGLIB$$38174f4b.getAllGoods(<generated>)
-        at com.liushaoming.jseckill.backend.service.impl.SeckillServiceImpl.getSeckillList(SeckillServiceImpl.java:73)
-        at com.liushaoming.jseckill.backend.service.impl.SeckillServiceImpl$$FastClassBySpringCGLIB$$85f44643.invoke(<generated>)
+        at com.mediaai.javamiaosha.backend.dao.cache.RedisDAO$$EnhancerBySpringCGLIB$$38174f4b.getAllGoods(<generated>)
+        at com.mediaai.javamiaosha.backend.service.impl.SeckillServiceImpl.getSeckillList(SeckillServiceImpl.java:73)
+        at com.mediaai.javamiaosha.backend.service.impl.SeckillServiceImpl$$FastClassBySpringCGLIB$$85f44643.invoke(<generated>)
 
 ```
 其中重要的一行是
 ```text
-at com.liushaoming.jseckill.backend.dao.cache.RedisDAO.getAllGoods(RedisDAO.java:82)
+at com.mediaai.javamiaosha.backend.dao.cache.RedisDAO.getAllGoods(RedisDAO.java:82)
 ```
 找到代码的82行如下
 ```java
